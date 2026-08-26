@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TYTY1899 — La Bande</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17120e;
+    --ink-2:#221a14;
+    --parchment:#e9dcbd;
+    --parchment-dim:#c9b98f;
+    --rust:#9a3324;
+    --gold:#c9982f;
+    --teal:#3f6461;
+    --line: rgba(233,220,189,0.16);
+    --radius: 4px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(154,51,36,0.18), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(63,100,97,0.14), transparent 55%),
+      var(--ink);
+    color:var(--parchment);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(23,18,14,0.88);
+    backdrop-filter: blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar{display:flex; align-items:center; justify-content:space-between; padding:14px 24px;}
+  .brand{
+    font-family:'Rye', serif; font-size:20px; letter-spacing:0.5px;
+    color:var(--gold);
+  }
+  .navlinks{display:flex; gap:26px; font-size:14px; font-weight:600;}
+  .navlinks a{opacity:0.85; text-decoration:none; border-bottom:2px solid transparent; padding-bottom:4px; cursor:pointer;}
+  .navlinks a:hover, .navlinks a:focus-visible{opacity:1; border-color:var(--gold);}
+  .nav-cta{
+    background:var(--rust); color:var(--parchment); padding:9px 16px; border-radius:var(--radius);
+    font-weight:700; font-size:13px; text-decoration:none; border:1px solid rgba(0,0,0,0.2);
+  }
+  .nav-cta:hover{filter:brightness(1.12);}
+  @media (max-width:720px){ .navlinks{display:none;} }
+
+  /* HERO */
+  .hero{
+    padding:64px 24px 40px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--parchment-dim);
+    border:1px solid var(--line); padding:6px 12px; border-radius:999px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%; background:#5fbf6f; box-shadow:0 0 8px #5fbf6f; animation:pulse 1.8s infinite ease-in-out;}
+  @keyframes pulse{0%,100%{opacity:1} 50%{opacity:0.35}}
+  .poster{
+    margin-top:26px;
+    border:2px solid var(--gold);
+    outline:1px solid rgba(201,152,47,0.35);
+    outline-offset:6px;
+    border-radius:2px;
+    padding:44px 36px;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 4px),
+      linear-gradient(180deg, rgba(233,220,189,0.05), transparent 40%);
+    text-align:center;
+  }
+  .poster .kicker{
+    font-family:'JetBrains Mono', monospace; letter-spacing:6px; font-size:12px; color:var(--gold); text-transform:uppercase;
+  }
+  .poster h1{
+    font-family:'Rye', serif; font-weight:400;
+    font-size:clamp(38px, 7vw, 74px);
+    margin:10px 0 4px;
+    color:var(--parchment);
+    text-shadow:0 2px 0 rgba(0,0,0,0.4);
+  }
+  .poster .sub{
+    font-size:15px; color:var(--parchment-dim); max-width:520px; margin:6px auto 26px;
+  }
+  .hero-actions{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:30px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 22px; border-radius:var(--radius); font-weight:700; font-size:14px;
+    text-decoration:none; border:1px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--rust); color:var(--parchment); border-color:rgba(0,0,0,0.25);}
+  .btn-primary:hover{filter:brightness(1.1);}
+  .btn-outline{background:transparent; color:var(--parchment); border-color:var(--gold);}
+  .btn-outline:hover{background:rgba(201,152,47,0.1);}
+  .btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+
+  /* GOAL BANNER (replaces sub counter) */
+  .goal-banner{
+    display:inline-flex; align-items:center; gap:10px;
+    border-top:1px dashed var(--parchment-dim); border-bottom:1px dashed var(--parchment-dim);
+    padding:16px 28px; margin-top:6px;
+    font-family:'JetBrains Mono', monospace; font-size:14px; letter-spacing:1px;
+    color:var(--gold); text-transform:uppercase;
+  }
+  .goal-banner .target{color:var(--rust); font-weight:700;}
+
+  /* SECTIONS */
+  section{padding:72px 24px;}
+  .section-head{margin-bottom:40px; text-align:center;}
+  .section-head .tag{font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:3px; color:var(--teal); text-transform:uppercase;}
+  .section-head h2{font-family:'Rye', serif; font-weight:400; font-size:clamp(28px,4vw,42px); margin:8px 0 0; color:var(--parchment);}
+
+  /* GAMES */
+  .games{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media (max-width:800px){ .games{grid-template-columns:1fr;} }
+  .card{
+    border:1px solid var(--line); border-radius:6px; padding:26px 22px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    transition:transform 0.2s ease, border-color 0.2s ease;
+  }
+  .card:hover{transform:translateY(-4px); border-color:var(--gold);}
+  .card .icon{
+    width:52px; height:52px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-size:24px; margin-bottom:16px;
+  }
+  .icon-rdr{background:rgba(154,51,36,0.18); color:#e08a70;}
+  .icon-fn{background:rgba(63,100,97,0.22); color:#7fd6c9;}
+  .icon-rbx{background:rgba(201,152,47,0.18); color:var(--gold);}
+  .card h3{font-size:18px; margin:0 0 6px; font-weight:700;}
+  .card p{font-size:13.5px; color:var(--parchment-dim); line-height:1.6; margin:0;}
+  .card .badge{
+    display:inline-block; margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:1.5px; text-transform:uppercase; color:var(--parchment-dim); border:1px solid var(--line);
+    padding:4px 8px; border-radius:999px;
+  }
+
+  /* DISCORD */
+  .discord-band{
+    background:linear-gradient(135deg, rgba(63,100,97,0.16), rgba(154,51,36,0.1));
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    text-align:center;
+  }
+  .discord-band .wrap{max-width:640px;}
+  .discord-band h2{font-family:'Rye', serif; font-weight:400; font-size:clamp(26px,4vw,38px); margin:0 0 12px;}
+  .discord-band p{color:var(--parchment-dim); margin-bottom:26px; font-size:14.5px;}
+
+  /* ACCOUNT (email only, no OTP) */
+  .account-box{
+    max-width:420px; margin:0 auto; border:1px solid var(--line); border-radius:8px;
+    padding:32px; background:rgba(255,255,255,0.02);
+  }
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; color:var(--parchment-dim);}
+  .field input{
+    width:100%; padding:11px 12px; border-radius:var(--radius); border:1px solid var(--line);
+    background:var(--ink-2); color:var(--parchment); font-size:14px;
+  }
+  .field input:focus-visible{outline:2px solid var(--teal); border-color:var(--teal);}
+  .msg{font-size:12.5px; padding:10px 12px; border-radius:var(--radius); margin-bottom:14px; display:none;}
+  .msg.show{display:block;}
+  .msg-error{background:rgba(154,51,36,0.18); border:1px solid var(--rust); color:#f3c3ba;}
+  .msg-success{background:rgba(95,191,111,0.15); border:1px solid #5fbf6f; color:#cdeed3;}
+  .fullwidth{width:100%; justify-content:center;}
+  .step{display:none;}
+  .step.active{display:block;}
+
+  /* CHAT */
+  .chat-box{
+    max-width:560px; margin:0 auto; border:1px solid var(--line); border-radius:8px;
+    background:rgba(255,255,255,0.02); overflow:hidden;
+  }
+  .chat-log{
+    height:360px; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:12px;
+  }
+  .chat-msg{font-size:13.5px; line-height:1.5;}
+  .chat-msg .who{color:var(--gold); font-weight:700; font-family:'JetBrains Mono',monospace; font-size:12px;}
+  .chat-msg .when{color:var(--parchment-dim); font-size:10.5px; margin-left:6px;}
+  .chat-msg .txt{color:var(--parchment);}
+  .chat-empty{color:var(--parchment-dim); font-size:13px; text-align:center; margin-top:40px;}
+  .chat-input-row{
+    display:flex; gap:10px; padding:14px; border-top:1px solid var(--line);
+  }
+  .chat-input-row input{
+    flex:1; padding:11px 12px; border-radius:var(--radius); border:1px solid var(--line);
+    background:var(--ink-2); color:var(--parchment); font-size:14px;
+  }
+  .chat-locked{
+    text-align:center; padding:30px 20px; color:var(--parchment-dim); font-size:13.5px;
+  }
+  .chat-locked a{color:var(--teal); font-weight:600; text-decoration:underline; cursor:pointer;}
+
+  footer{
+    padding:36px 24px; text-align:center; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--parchment-dim);
+  }
+  footer a{text-decoration:none; color:var(--gold);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="navbar">
+    <div class="brand">TYTY1899</div>
+    <div class="navlinks">
+      <a href="#jeux">Jeux</a>
+      <a href="#discord">Discord</a>
+      <a href="#compte">Compte</a>
+      <a href="#chat">Chat</a>
+    </div>
+    <a class="nav-cta" href="https://discord.gg/Gx6Z2XbM6" target="_blank" rel="noopener">Rejoindre</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow"><span class="dot"></span> En ligne maintenant</span>
+
+    <div class="poster">
+      <div class="kicker">Avis de recherche</div>
+      <h1>TYTY1899</h1>
+      <p class="sub">RDR2, Fortnite, Roblox — du contenu tous les jours et une bande qui grandit. Rejoins la chasse.</p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://youtube.com/@tyty18991?si=LUKp6W3yDF8YikkE" target="_blank" rel="noopener">▶ Voir la chaîne YouTube</a>
+        <a class="btn btn-outline" href="https://discord.gg/Gx6Z2XbM6" target="_blank" rel="noopener">Rejoindre le Discord</a>
+      </div>
+
+      <div class="goal-banner">🎯 On rush les <span class="target">150 abonnés</span> — chaque abonné compte</div>
+    </div>
+  </div>
+</header>
+
+<section id="jeux">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="tag">Au programme</div>
+      <h2>Les terrains de jeu</h2>
+    </div>
+    <div class="games">
+      <div class="card">
+        <div class="icon icon-rdr">🤠</div>
+        <h3>Red Dead Redemption 2</h3>
+        <p>Roleplay, chasse au trésor et sessions freeroam dans l'Ouest sauvage. Le jeu signature de la chaîne.</p>
+        <span class="badge">Aventure</span>
+      </div>
+      <div class="card">
+        <div class="icon icon-fn">🎯</div>
+        <h3>Fortnite</h3>
+        <p>Parties classées, victoires royales et moments chaotiques avec la communauté en live.</p>
+        <span class="badge">Battle Royale</span>
+      </div>
+      <div class="card">
+        <div class="icon icon-rbx">🧱</div>
+        <h3>Roblox</h3>
+        <p>Exploration des meilleurs jeux du moment et défis lancés par les abonnés du Discord.</p>
+        <span class="badge">Sandbox</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="discord" class="discord-band">
+  <div class="wrap">
+    <h2>La bande se retrouve sur Discord</h2>
+    <p>Annonces de live, organisation de sessions RDR2/Fortnite/Roblox, et discussions avec le reste de la communauté.</p>
+    <a class="btn btn-primary" href="https://discord.gg/Gx6Z2XbM6" target="_blank" rel="noopener">Rejoindre le serveur →</a>
+  </div>
+</section>
+
+<section id="compte">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="tag">Rejoindre la bande</div>
+      <h2>Créer ton compte</h2>
+    </div>
+
+    <div class="account-box">
+      <div class="step active" id="formStep">
+        <div class="field">
+          <label for="name">Pseudo</label>
+          <input type="text" id="name" placeholder="Ton pseudo">
+        </div>
+        <div class="field">
+          <label for="email">Adresse email</label>
+          <input type="email" id="email" placeholder="toi@exemple.com">
+        </div>
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" placeholder="8 caractères minimum">
+        </div>
+        <div class="msg msg-error" id="formError"></div>
+        <button class="btn btn-primary fullwidth" id="createBtn">Créer mon compte</button>
+      </div>
+
+      <div class="step" id="successStep" style="text-align:center;">
+        <div class="msg msg-success show" style="display:inline-block;">Compte créé — bienvenue <span id="successName"></span> 🤠</div>
+        <p style="font-size:13px; color:var(--parchment-dim); margin-top:16px;">Tu peux maintenant discuter avec la bande dans l'onglet <a href="#chat" style="color:var(--teal); text-decoration:underline;">Chat</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="chat">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="tag">La bande discute</div>
+      <h2>Chat</h2>
+    </div>
+
+    <div class="chat-box">
+      <div class="chat-log" id="chatLog">
+        <div class="chat-empty" id="chatEmpty">Aucun message pour l'instant. Sois le premier à écrire !</div>
+      </div>
+      <div id="chatLocked" class="chat-locked">
+        Crée ton compte pour rejoindre la discussion → <a href="#compte">créer un compte</a>
+      </div>
+      <div class="chat-input-row" id="chatInputRow" style="display:none;">
+        <input type="text" id="chatInput" placeholder="Écris un message..." maxlength="240">
+        <button class="btn btn-primary" id="chatSendBtn">Envoyer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Fan-site communautaire non officiel pour TYTY1899 · <a href="https://youtube.com/@tyty18991?si=LUKp6W3yDF8YikkE" target="_blank" rel="noopener">YouTube</a> · <a href="https://discord.gg/Gx6Z2XbM6" target="_blank" rel="noopener">Discord</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  let currentUser = null; // { pseudo }
+
+  // ---------- Account creation (email only, no OTP) ----------
+  const formStep = document.getElementById('formStep');
+  const successStep = document.getElementById('successStep');
+  const formError = document.getElementById('formError');
+  const createBtn = document.getElementById('createBtn');
+  const successName = document.getElementById('successName');
+
+  function showError(el, text){ el.textContent = text; el.classList.add('show'); }
+  function hideError(el){ el.classList.remove('show'); }
+
+  createBtn.addEventListener('click', async () => {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    hideError(formError);
+
+    if (!name || !email || !password) {
+      showError(formError, 'Remplis tous les champs pour continuer.');
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      showError(formError, 'Entre une adresse email valide.');
+      return;
+    }
+    if (password.length < 8) {
+      showError(formError, 'Le mot de passe doit faire au moins 8 caractères.');
+      return;
+    }
+
+    try {
+      await window.storage.set('account:' + email, JSON.stringify({
+        name, email, joinedAt: new Date().toISOString()
+      }), true);
+    } catch (e) {
+      console.error('storage error', e);
+    }
+
+    currentUser = { pseudo: name };
+    successName.textContent = name;
+    formStep.classList.remove('active');
+    successStep.classList.add('active');
+    unlockChat();
+  });
+
+  // ---------- Chat ----------
+  const chatLog = document.getElementById('chatLog');
+  const chatEmpty = document.getElementById('chatEmpty');
+  const chatLocked = document.getElementById('chatLocked');
+  const chatInputRow = document.getElementById('chatInputRow');
+  const chatInput = document.getElementById('chatInput');
+  const chatSendBtn = document.getElementById('chatSendBtn');
+
+  function unlockChat(){
+    chatLocked.style.display = 'none';
+    chatInputRow.style.display = 'flex';
+  }
+
+  function renderMessages(messages){
+    if (!messages.length) {
+      chatLog.innerHTML = '';
+      chatLog.appendChild(chatEmpty);
+      return;
+    }
+    chatLog.innerHTML = messages.map(m => `
+      <div class="chat-msg">
+        <span class="who">${escapeHtml(m.pseudo)}</span><span class="when">${new Date(m.time).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})}</span>
+        <div class="txt">${escapeHtml(m.text)}</div>
+      </div>
+    `).join('');
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function loadMessages(){
+    try {
+      const res = await window.storage.get('chat:messages', true);
+      const messages = res ? JSON.parse(res.value) : [];
+      renderMessages(messages);
+    } catch (e) {
+      renderMessages([]);
+    }
+  }
+
+  async function sendMessage(){
+    const text = chatInput.value.trim();
+    if (!text || !currentUser) return;
+    let messages = [];
+    try {
+      const res = await window.storage.get('chat:messages', true);
+      messages = res ? JSON.parse(res.value) : [];
+    } catch (e) { messages = []; }
+    messages.push({ pseudo: currentUser.pseudo, text, time: Date.now() });
+    if (messages.length > 100) messages = messages.slice(-100);
+    try {
+      await window.storage.set('chat:messages', JSON.stringify(messages), true);
+    } catch (e) { console.error('storage error', e); }
+    chatInput.value = '';
+    renderMessages(messages);
+  }
+
+  chatSendBtn.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+  loadMessages();
+  setInterval(loadMessages, 4000);
+})();
+</script>
+
+</body>
+</html>
